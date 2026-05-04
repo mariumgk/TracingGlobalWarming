@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+*.env
+*.env.local
+*.local
+
+# Editor directories
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+.DS_Store
+
+# OS files
+Thumbs.db
+
+# TypeScript build artifacts
+*.tsbuildinfo
+
+# Jupyter checkpoint directories
+.ipynb_checkpoints/
+
+# Windows shortcuts / project files
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
