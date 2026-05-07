@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const EarthHeroScene = lazy(() => import('../three/EarthHeroScene.jsx'));
 
@@ -17,6 +17,12 @@ export default function Hero() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const { scrollY } = useScroll();
+  const earthY = useTransform(scrollY, [0, 1000], [0, 400]);
+  const earthOpacity = useTransform(scrollY, [0, 800], [1, 0]);
+  const textY = useTransform(scrollY, [0, 800], [0, -150]);
+  const textOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+
   return (
     <section
       id="hero"
@@ -24,19 +30,25 @@ export default function Hero() {
       style={{ background: 'linear-gradient(160deg, #0a1628 0%, #102A43 40%, #1a3a52 100%)' }}
     >
       {/* 3D Earth — right side */}
-      <div className="absolute right-0 top-0 w-full md:w-[55%] h-full pointer-events-none md:pointer-events-auto">
+      <motion.div 
+        className="absolute right-0 top-0 w-full md:w-[55%] h-full pointer-events-none md:pointer-events-auto"
+        style={{ y: earthY, opacity: earthOpacity }}
+      >
         <Suspense fallback={<div className="w-full h-full" />}>
           <EarthHeroScene />
         </Suspense>
-      </div>
+      </motion.div>
 
       {/* Left content */}
-      <div className="relative z-10 flex flex-col justify-center min-h-screen px-8 md:px-16 lg:px-24 max-w-2xl">
+      <motion.div 
+        className="relative z-10 flex flex-col justify-center min-h-screen px-8 md:px-16 lg:px-24 max-w-2xl"
+        style={{ y: textY, opacity: textOpacity }}
+      >
         {/* Overline */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
+          initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="text-xs font-semibold tracking-[0.25em] uppercase mb-6"
           style={{ color: '#F4B860' }}
         >
@@ -45,10 +57,10 @@ export default function Hero() {
 
         {/* Title */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.4 }}
-          className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6"
+          initial={{ opacity: 0, y: 60, filter: 'blur(15px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ type: 'spring', bounce: 0.4, duration: 1.2, delay: 0.4 }}
+          className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
           style={{ color: '#F7F4EC' }}
         >
           Tracing<br />
@@ -57,10 +69,10 @@ export default function Hero() {
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-base md:text-lg leading-relaxed mb-10 max-w-md"
+          initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 1, delay: 0.6 }}
+          className="text-lg md:text-xl leading-relaxed mb-10 max-w-lg"
           style={{ color: '#A8AEB8' }}
         >
           From human causes to planetary consequences — a scrollytelling investigation 
@@ -69,9 +81,9 @@ export default function Hero() {
 
         {/* Stats row */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
+          initial={{ opacity: 0, x: -30, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+          transition={{ type: 'spring', bounce: 0.3, duration: 1, delay: 0.8 }}
           className="flex gap-6 mb-10"
         >
           {[
@@ -91,8 +103,10 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.1 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => scrollTo('signal')}
-          className="flex items-center gap-3 text-sm font-medium group w-fit"
+          className="flex items-center gap-3 text-sm font-medium group w-fit bg-white/5 hover:bg-white/10 px-5 py-3 rounded-full transition-colors"
           style={{ color: '#F7F4EC' }}
         >
           <span>Begin the story</span>
@@ -103,7 +117,7 @@ export default function Hero() {
             style={{ color: '#D95D39' }}
           >↓</motion.div>
         </motion.button>
-      </div>
+      </motion.div>
 
       {/* Chapter cards at bottom */}
       <motion.div
@@ -116,15 +130,29 @@ export default function Hero() {
           {CHAPTERS.map((ch, i) => (
             <motion.button
               key={ch.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4 + i * 0.07 }}
-              whileHover={{ scale: 1.04, y: -2 }}
+              initial={{ opacity: 0, y: 50, scale: 0.9, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+              transition={{ 
+                type: 'spring', 
+                bounce: 0.5,
+                duration: 0.8,
+                delay: 1.2 + i * 0.1 
+              }}
+              whileHover={{ 
+                scale: 1.08, 
+                y: -8,
+                rotateX: 8,
+                rotateY: -8,
+                boxShadow: "0 20px 40px -10px rgba(0,0,0,0.5)",
+                backgroundColor: 'rgba(255,255,255,0.1)'
+              }}
               onClick={() => scrollTo(ch.id)}
-              className="text-left p-4 rounded-xl border transition-all duration-200"
+              className="text-left p-4 rounded-xl border transition-colors duration-200 cursor-pointer"
               style={{
-                background: 'rgba(255,255,255,0.05)',
+                background: 'rgba(255,255,255,0.03)',
                 borderColor: 'rgba(255,255,255,0.1)',
+                perspective: '1000px',
+                transformStyle: 'preserve-3d'
               }}
             >
               <div className="text-xs font-bold mb-1" style={{ color: ch.color }}>{ch.num}</div>

@@ -73,7 +73,7 @@ export default function SignalSection({ data, envelope }) {
         <div className="relative flex gap-12">
           {/* Sticky chart panel */}
           <div className="hidden md:block sticky top-20 h-fit w-[55%] shrink-0">
-            <div className="chart-container">
+            <motion.div layout className="chart-container">
           <div className="mb-6">
               <WarmingStripes data={data} scrollProgress={currentStep === 0 ? stripesProgress : 1} />
             </div>
@@ -104,7 +104,7 @@ export default function SignalSection({ data, envelope }) {
                   Warming since 1980 alone represents a ≥95% probability of anthropogenic cause.
                 </div>
               </motion.div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Scrollama steps */}
@@ -115,8 +115,14 @@ export default function SignalSection({ data, envelope }) {
                   <div className="step">
                     <motion.div
                       className="step-content chart-container"
-                      animate={{ opacity: currentStep === step.id ? 1 : 0.4 }}
-                      transition={{ duration: 0.3 }}
+                      animate={{ 
+                        opacity: currentStep === step.id ? 1 : 0.15,
+                        scale: currentStep === step.id ? 1 : 0.85,
+                        y: currentStep === step.id ? 0 : 50,
+                        filter: currentStep === step.id ? 'blur(0px)' : 'blur(8px)',
+                        boxShadow: currentStep === step.id ? "0 25px 50px -12px rgba(0,0,0,0.15)" : "0 0px 0px 0px rgba(0,0,0,0)"
+                      }}
+                      transition={{ type: 'spring', bounce: 0.5, duration: 0.8 }}
                     >
                       <div
                         className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white mb-4"

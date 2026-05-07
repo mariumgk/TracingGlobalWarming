@@ -1,0 +1,92 @@
+# Tracing Global Warming — Exploratory Data Analysis
+**Mid-Deliverable Submission**
+
+## 1. Theme
+The central theme of this project is **Tracing the Physical Reality of Global Warming**. 
+We aim to construct a data-backed foundation for a narrative-driven climate visualization. We trace the causal chain from observed warming, through attribution (human vs. natural forcings), to the physical consequences observed in Earth's systems (oceans and cryosphere), before closing the loop with the human emissions source signal.
+---
+## 2. Datasets Used
+This project utilizes a suite of time-series datasets:
+
+1. **Global Temperature Anomaly** (`observed.csv`): Annual global mean temperature anomalies (1880–2014).
+2. **Climate Forcings** (`forcings.csv`): Human and natural radiative forcings in absolute Kelvin (1850–2005).
+3. **Natural Variability Baseline** (`piControl.csv`): 851 years of simulated pre-industrial temperature variability (Kelvin).
+4. **Atmospheric Greenhouse Gases** (`CO2monthlyavg.txt`, `CH4monthlyavg.txt`): NOAA ESRL monthly mean observations from Mauna Loa.
+5. **Global Mean Sea Level** (`NASA_SSH_GMSL_INDICATOR.txt`): NASA satellite altimetry tracking sea level rise.
+6. **Sea Ice Index** (`Sea_Ice_Index_Monthly_Data_by_Year_G02135_v4.0.xlsx`): NSIDC monthly Arctic sea ice extent.
+7. **CO2 Emissions** (`co2-emissions-fossil-land.csv`): Global Carbon Project annual emissions.
+---
+## 3. Overall Questions, Motivations, and Citations
+
+**Question 1: Are current warming trends statistically distinct from natural historical climate variability?**
+*   **Motivation**: A common public misunderstanding is that modern warming is a natural cycle. To firmly establish human causality, we must first demonstrate that modern warming breaches the boundaries of pre-industrial natural variance.
+*   **Citation**: IPCC, 2021: Climate Change 2021: The Physical Science Basis. Contribution of Working Group I to the Sixth Assessment Report.
+
+**Question 2: How do the physical consequences of warming manifest in the oceans and cryosphere?**
+*   **Motivation**: Temperature is an abstract metric. Translating warming into physical impacts—like the thermal expansion of oceans (sea level rise) and the melting of polar ice—provides visceral, measurable evidence of a shifting Earth system. 
+*   **Citation**: NASA Global Climate Change: Vital Signs of the Planet; NSIDC Sea Ice Index.
+
+**Question 3: What is the relationship between the human emissions "flow" and the atmospheric concentration "stock"?**
+*   **Motivation**: Understanding the climate crisis requires distinguishing between what we put into the system annually (emissions) and what accumulates over time (concentrations). The flow-stock relationship is critical to the causality story.
+*   **Citation**: Global Carbon Project (2023) - Carbon budget and emissions tracking; Friedlingstein et al., Earth System Science Data.
+---
+## 4. Phase 1: Dataset Overview & Structural Audit
+In this section, we ingest, clean, and explore the structures of all relevant datasets.
+
+### Map Visualization Note
+The datasets analyzed here are overwhelmingly **temporal scalar aggregates** (e.g., global mean temperature, global sea level, pan-Arctic ice extent, or Mauna Loa point observations). As such, map visualizations are not applicable to the core physics tracking. 
+However, the emissions dataset (`co2-emissions-fossil-land.csv`) contains ISO country codes. To fulfill the geographic visualization requirement, we will plot a choropleth map of the emissions footprint before proceeding to the global narrative.
+---
+### 4.1 Temperature, Forcings, and Baseline
+We load the observed temperature anomalies, forcings, and piControl simulation, standardizing column names immediately.
+---
+### 4.2 Atmospheric Greenhouse Gases (CO2 & CH4)
+The NOAA `.txt` datasets contain complex metadata and non-numeric rows. We write a robust parser to safely extract the time and concentration variables.
+---
+### 4.3 Sea Level, Sea Ice, and Emissions
+We apply robust extraction techniques for the final three datasets.
+---
+### Geographic Overview: Top Emitters in 2022
+Addressing the map visualization rule using the geographical entities within the emissions data.
+---
+## 5. Phase 2: Question-Driven Exploratory Analysis
+We transition from raw data inspection to refining visualizations that specifically address our overall questions.
+---
+### Question 1: Are current warming trends statistically distinct from natural historical climate variability?
+We visualize the `piControl` dataset (simulating natural variability over 851 years) and set it as an expected envelope. Then, we plot the observed modern warming record against this envelope. We follow up by reviewing radiative forcings.
+---
+### Complementary View: Global Warming Stripes
+To visceralize the observed temperature record mapped above, we can strip away axes and trend lines to create a 'barcode' of planetary heat. Each stripe represents the global average temperature of a single year. Blue bands indicate years cooler than the historical average, while red bands indicate warmer years. The intense concentration of dark red on the right edge is the visual analogue of the modern warming trend.
+---
+*Analysis & Refinement*: The modern temperature trend thoroughly breaches the statistical boundaries of historical natural variation (the 3σ envelope). Furthermore, natural radiative forcing is completely flat long-term; the upward temperature trajectory perfectly aligns with the rise in human-produced forcing. The strong alignment is consistent with an anthropogenic mechanism driving warming.
+
+Note: Radiative forcing data available through 2005. The observed temperature record continues beyond this window, consistent with the ongoing human forcing trend.
+---
+### Question 2: How do the physical consequences of warming manifest in the oceans and cryosphere?
+We synthesize sea level rise (representing oceanic volume expansion and ice melt additions) and Arctic September sea ice extent (representing cryosphere degradation).
+---
+*Analysis & Refinement*: Both planetary systems demonstrate severe, accelerating responses. Sea levels have accumulated >10 cm of rise since 1993. Simultaneously, the Arctic summer minimum is shrinking by roughly $0.8$ million $\text{km}^2$ per decade. These dual metrics translate the abstract concept of temperature into concrete physical volume and state changes.
+---
+### Question 3: What is the relationship between the human emissions "flow" and the atmospheric concentration "stock"?
+To address this, we cross-reference the Global Carbon Project emissions data with NOAA Mauna Loa CO2 readings on a dual axis. This explicitly showcases the "tap" (emissions) filling the "bathtub" (concentration).
+---
+*Analysis & Refinement*: The Pearson correlation ($r > 0.95$) demonstrates the tight relationship between the rate humans emit CO2 (flow) and the quantity accumulated in the atmosphere (stock). This result is highly consistent with the broader scientific consensus that human fossil-fuel combustion is primarily responsible for the greenhouse gas buildup driving modern forcing.
+---
+Both CO₂ and CH₄ show sustained upward trends since measurements began. CO₂ from fossil fuel combustion and CH₄ from agriculture, landfills, and gas leaks are the two dominant human greenhouse gases driving the radiative forcing increase shown in Chapter 3.
+---
+### Complementary View: The Sources of the Flow (Fossil vs. Land Use)
+The global emission 'flow' shown above is not a monolith. By examining the underlying components, we can see a clear historical phase shift: in the 19th century, land-use change (deforestation and agriculture) was the primary driver of anthropogenic CO₂, but by the mid-20th century, explosive fossil fuel combustion completely overtook it.
+---
+## 6. Key Findings
+1. **Unprecedented Warming Reality**: The current temperature trend severely eclipses pre-industrial norms bounded by natural variability. Radiative forcing metrics clearly support that anthropogenic signals (human inputs), not natural cycles, align with this warming phase.
+2. **Synchronized System Decay**: There is undeniable, mathematically robust deterioration in the Earth's physical reservoirs:
+   - Global mean sea level consistently climbs, adding $>10$ cm of mass/volume growth since satellite records began in 1993.
+   - The Arctic acts as a rapid melting chamber, systematically losing its protective summer sea ice shield at $\approx 0.8$ million $\text{km}^2$ per decade.
+3. **The Emissive Driver**: Tracking supply-side data (emissions) versus accumulation (concentration) solidifies the narrative. As global CO2 emissions from human activities structurally accelerate, atmospheric concentration perfectly integrates that flux, demonstrating the source signal feeding the climate reality.
+---
+## 7. Limitations & Preprocessing Choices
+*   **Missing Sentinels & String Artifacts**: Observational inputs (such as NOAA's ambient measurements and NASA's IEEE altimetry values) featured unique error handling challenges. Robust parsers explicitly stripping `NaN` sentinels (e.g., `-999.99` and $>1000$ values) were engineered and employed to prevent analytical distortions.
+*   **Temporal Normalization**: Because some foundational metrics are captured monthly or weekly (e.g., Mauna Loa readings), they were specifically annualized via grouped means where required (like the dual-axis concentration comparison) to uniformly match emissions or forcing granularities. 
+*   **Geographic Focus Alignment**: We exclusively deployed map visualizations on suitable ISO-coded entities (`co2-emissions-fossil-land.csv`). Uniform planetary parameters (temperature anomaly, cumulative concentration, total SLR) correctly bypassed geo-visualization as they signify global integration fields.
+*   **Standardization**: To resolve file structure fragility across different releases, column headers inside the DataFrames (`observed['temp_anomaly']`, `forcings['human']`) were proactively standardized directly after load, ensuring absolute cross-cell reliability downstream.
+---

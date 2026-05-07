@@ -153,3 +153,34 @@ export async function loadEmissions() {
 
   return { worldByYear, countrySnapshot };
 }
+
+/** NASA Sea Level: GMSL and smoothed GMSL (cm) */
+export async function loadSeaLevel() {
+  const text = await fetch(`${BASE}data/sea_level_data/NASA_SSH_GMSL_INDICATOR.txt`).then(r => r.text());
+  const lines = text.split('\n');
+
+  const data = [];
+  lines.forEach(l => {
+    // Skip headers and empty lines
+    if (l.startsWith('HDR') || l.trim() === '') return;
+    
+    const parts = l.trim().split(/\s+/);
+    if (parts.length >= 3) {
+      const yearFraction = parseFloat(parts[0]);
+      const gmsl = parseFloat(parts[1]);
+      const gmslSmooth = parseFloat(parts[2]);
+      
+      // Filter out missing values
+      if (gmsl < 9e30 && gmslSmooth < 9e30) {
+        data.push({
+          year: Math.floor(yearFraction),
+          yearFraction: yearFraction,
+          gmsl: gmsl,
+          gmslSmooth: gmslSmooth
+        });
+      }
+    }
+  });
+
+  return data;
+}

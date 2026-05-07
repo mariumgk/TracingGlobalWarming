@@ -89,11 +89,12 @@ export default function BigPictureSection() {
           {NODES.map((node, i) => (
             <motion.div
               key={node.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 80, scale: 0.85, filter: 'blur(10px)' }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="relative"
+              transition={{ type: "spring", bounce: 0.5, duration: 0.8, delay: i * 0.15 }}
+              whileHover={{ x: 10, scale: 1.02, boxShadow: "0 20px 40px -10px rgba(0,0,0,0.15)" }}
+              className="relative transition-all duration-300"
             >
               {/* Timeline marker */}
               <div 
@@ -128,11 +129,11 @@ export default function BigPictureSection() {
 
         {/* Final message */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 80, scale: 0.85, filter: 'blur(15px)' }}
+          whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
-          className="bg-white border border-slate-200 shadow-sm rounded-2xl p-8 text-center max-w-3xl mx-auto mt-24 relative"
+          transition={{ type: "spring", bounce: 0.6, duration: 1.2 }}
+          className="bg-white border border-slate-200 shadow-xl rounded-2xl p-10 text-center max-w-3xl mx-auto mt-24 relative"
         >
           {/* Timeline end line to connect to the box */}
           <div className="absolute w-0.5 bg-slate-200 h-24 -top-24 left-[1.1rem] md:left-[2.1rem]"></div>

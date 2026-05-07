@@ -20,6 +20,7 @@ import {
   loadSeaIce,
   loadCO2,
   loadEmissions,
+  loadSeaLevel,
 } from './utils/dataLoaders.js';
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
     forcings: [],
     envelope: null,
     seaIce: [],
+    seaLevel: [],
     co2: [],
     emissions: null,
     loaded: false,
@@ -40,15 +42,17 @@ export default function App() {
       loadForcings(),
       loadPiControl(),
       loadSeaIce(),
+      loadSeaLevel(),
       loadCO2(),
       loadEmissions(),
     ])
-      .then(([observed, forcings, envelope, seaIce, co2, emissions]) => {
+      .then(([observed, forcings, envelope, seaIce, seaLevel, co2, emissions]) => {
         setData({
           observed,
           forcings,
           envelope,
           seaIce,
+          seaLevel,
           co2,
           emissions,
           loaded: true,
@@ -116,7 +120,7 @@ export default function App() {
         <>
           <SignalSection data={data.observed} envelope={data.envelope} />
           <CauseSection data={data.forcings} observedData={data.observed} />
-          <ConsequencesSection seaIce={data.seaIce} />
+          <ConsequencesSection seaIce={data.seaIce} seaLevel={data.seaLevel} />
           <SourceSection emissions={data.emissions} co2={data.co2} />
           <MapSection countrySnapshot={data.emissions?.countrySnapshot || []} />
         </>

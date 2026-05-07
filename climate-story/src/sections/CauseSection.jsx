@@ -128,7 +128,14 @@ export default function CauseSection({ data, observedData }) {
                     <motion.div
                       className="step-content chart-container border-l-4"
                       style={{ borderColor: step.color }}
-                      animate={{ opacity: revealStep === step.id ? 1 : 0.35 }}
+                      animate={{ 
+                        opacity: revealStep === step.id ? 1 : 0.15,
+                        scale: revealStep === step.id ? 1 : 0.85,
+                        y: revealStep === step.id ? 0 : 50,
+                        filter: revealStep === step.id ? 'blur(0px)' : 'blur(8px)',
+                        boxShadow: revealStep === step.id ? "0 25px 50px -12px rgba(0,0,0,0.15)" : "0 0px 0px 0px rgba(0,0,0,0)"
+                      }}
+                      transition={{ type: 'spring', bounce: 0.5, duration: 0.8 }}
                     >
                       <div
                         className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white mb-3"

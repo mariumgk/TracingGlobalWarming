@@ -64,9 +64,10 @@ export default function SourceSection({ emissions, co2 }) {
 
         {/* Flow metaphor callout */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0, y: 30, scale: 0.95 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ type: 'spring', bounce: 0.4, duration: 0.8 }}
+          viewport={{ once: true, margin: "-50px" }}
           className="mb-12 p-6 rounded-2xl border-l-4 border-warming"
           style={{ background: '#FEF2EE' }}
         >
@@ -100,9 +101,10 @@ export default function SourceSection({ emissions, co2 }) {
         <div className="grid md:grid-cols-5 gap-8 items-start">
           {/* Chart (larger) */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, x: -30, scale: 0.95 }}
+            whileInView={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ type: 'spring', bounce: 0.3, duration: 0.8 }}
+            viewport={{ once: true, margin: "-50px" }}
             className="md:col-span-3 chart-container"
           >
             <div className="section-label mb-1">Emissions (left axis) vs Atmospheric CO₂ (right axis)</div>

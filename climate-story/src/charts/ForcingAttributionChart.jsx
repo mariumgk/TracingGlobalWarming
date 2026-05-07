@@ -5,33 +5,33 @@ import { motion } from 'framer-motion';
 const MARGIN = { top: 20, right: 18, bottom: 36, left: 44 };
 
 const SERIES = [
-  { key: 'solar',    label: 'Solar',            color: '#F4B860', dash: '5,3', order: 0, width: 1.5, isObs: false },
-  { key: 'volcanic', label: 'Volcanic',         color: '#8295A8', dash: '2,4', order: 1, width: 1.5, isObs: false },
-  { key: 'natural',  label: 'Natural Total',    color: '#64748B', dash: null,  order: 2, width: 2,   isObs: false },
-  { key: 'human',    label: 'Human Forcing',    color: '#D95D39', dash: null,  order: 3, width: 2.5, isObs: false },
-  { key: 'all',      label: 'All Forcings',     color: '#102A43', dash: null,  order: 4, width: 3,   isObs: false },
-  { key: 'observed', label: 'Observed Warming', color: '#1E293B', dash: null,  order: 4, width: 2,   isObs: true  },
+  { key: 'solar', label: 'Solar', color: '#F4B860', dash: '5,3', order: 0, width: 1.5, isObs: false },
+  { key: 'volcanic', label: 'Volcanic', color: '#8295A8', dash: '2,4', order: 1, width: 1.5, isObs: false },
+  { key: 'natural', label: 'Natural Total', color: '#64748B', dash: null, order: 2, width: 2, isObs: false },
+  { key: 'human', label: 'Human Forcing', color: '#D95D39', dash: null, order: 3, width: 2.5, isObs: false },
+  { key: 'all', label: 'All Forcings', color: '#102A43', dash: null, order: 4, width: 3, isObs: false },
+  { key: 'observed', label: 'Observed Warming', color: '#1E293B', dash: null, order: 4, width: 2, isObs: true },
 ];
 
 // Per-step opacity for chart lines. 0 = not yet revealed.
 const LINE_OPA = {
   //            s0    s1    s2    s3    s4
-  solar:    [1.00, 0.80, 0.35, 0.20, 0.15],
+  solar: [1.00, 0.80, 0.35, 0.20, 0.15],
   volcanic: [0.00, 1.00, 0.35, 0.20, 0.15],
-  natural:  [0.00, 0.00, 1.00, 0.40, 0.20],
-  human:    [0.00, 0.00, 0.00, 1.00, 0.55],
-  all:      [0.00, 0.00, 0.00, 0.00, 1.00],
+  natural: [0.00, 0.00, 1.00, 0.40, 0.20],
+  human: [0.00, 0.00, 0.00, 1.00, 0.55],
+  all: [0.00, 0.00, 0.00, 0.00, 1.00],
   observed: [0.00, 0.00, 0.00, 0.00, 1.00],
 };
 
 // Per-step opacity for legend items. Minimum 0.20 so all items stay legible.
 const LEGEND_OPA = {
   //            s0    s1    s2    s3    s4
-  solar:    [1.00, 0.85, 0.35, 0.25, 0.20],
+  solar: [1.00, 0.85, 0.35, 0.25, 0.20],
   volcanic: [0.25, 1.00, 0.35, 0.25, 0.20],
-  natural:  [0.25, 0.25, 1.00, 0.40, 0.25],
-  human:    [0.25, 0.25, 0.25, 1.00, 0.55],
-  all:      [0.25, 0.25, 0.25, 0.25, 1.00],
+  natural: [0.25, 0.25, 1.00, 0.40, 0.25],
+  human: [0.25, 0.25, 0.25, 1.00, 0.55],
+  all: [0.25, 0.25, 0.25, 0.25, 1.00],
   observed: [0.25, 0.25, 0.25, 0.25, 1.00],
 };
 
@@ -82,10 +82,10 @@ export default function ForcingAttributionChart({ data, observedData, revealStep
     const humanPos = data.filter(d => d.human > 0);
     const areaPath = humanPos.length
       ? d3.area()
-          .x(d => xScale(d.year))
-          .y0(yScale(0))
-          .y1(d => yScale(d.human))
-          .curve(d3.curveMonotoneX)(humanPos)
+        .x(d => xScale(d.year))
+        .y0(yScale(0))
+        .y1(d => yScale(d.human))
+        .curve(d3.curveMonotoneX)(humanPos)
       : '';
 
     let obsPath = null;
