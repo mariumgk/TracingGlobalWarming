@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const TEAM = [
   { name: 'Marium Imran', id: '2023303' },
-  { name: 'Team Member 2', id: '2023202' },
+  { name: 'Fatima Liaquat', id: '2023202' },
 ];
 
 const DATA_SOURCES = [

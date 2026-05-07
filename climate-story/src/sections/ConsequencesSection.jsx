@@ -35,7 +35,7 @@ export default function ConsequencesSection({ seaIce }) {
     <section id="consequences" ref={sectionRef} style={{ background: '#F7F4EC' }} className="py-24">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="max-w-2xl mb-16">
+        <div className="max-w-2xl mx-auto text-center mb-16">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}

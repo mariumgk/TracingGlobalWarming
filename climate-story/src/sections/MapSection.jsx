@@ -12,7 +12,7 @@ export default function MapSection({ countrySnapshot }) {
     <section id="map" style={{ background: '#F7F4EC' }} className="py-24">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="max-w-2xl mb-12">
+        <div className="max-w-2xl mx-auto text-center mb-12">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -65,6 +65,7 @@ export default function MapSection({ countrySnapshot }) {
             >
               <EmissionsMap
                 countrySnapshot={countrySnapshot}
+                selectedCountryCode={selectedCountry?.code}
                 onCountryClick={setSelectedCountry}
               />
             </motion.div>

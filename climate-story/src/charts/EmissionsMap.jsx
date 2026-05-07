@@ -9,11 +9,12 @@ const emissionsColorScale = d3.scaleSequentialLog()
   .interpolator(t => d3.interpolateOranges(t * 0.9 + 0.05))
   .clamp(true);
 
-export default function EmissionsMap({ countrySnapshot, onCountryClick }) {
+export default function EmissionsMap({ countrySnapshot, selectedCountryCode, onCountryClick }) {
   const svgRef = useRef();
   const [dims, setDims] = useState({ width: 900, height: 460 });
   const [tooltip, setTooltip] = useState(null);
   const [worldGeo, setWorldGeo] = useState(null);
+  const prevSelectedRef = useRef(selectedCountryCode);
 
   // Load world topojson
   useEffect(() => {
@@ -45,38 +46,92 @@ export default function EmissionsMap({ countrySnapshot, onCountryClick }) {
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
 
-    // Build emissions lookup: numeric ISO → total tonnes
-    const emissionsByNumericId = new Map();
-    // We'll match by country code — need a name→numeric map
-    // Use a simplified approach: map entity names to ISO numeric via a lookup
-    // The topojson uses numeric IDs, so we'll use a name-based fallback
+    let isInteracting = false;
+
     const countryByCode = new Map(countrySnapshot.map(d => [d.code, d]));
 
-    const projection = d3.geoNaturalEarth1()
-      .scale(width / 6.3)
-      .translate([width / 2, height / 2]);
+    const initialScale = Math.min(width, height) / 2.2;
+
+    const projection = d3.geoOrthographic()
+      .scale(initialScale)
+      .translate([width / 2, height / 2])
+      .clipAngle(90);
 
     const pathGen = d3.geoPath().projection(projection);
 
-    const g = svg.append('g');
+    let renderPaths = () => {
+      g.selectAll('path.country').attr('d', pathGen);
+      g.selectAll('path.graticule').attr('d', pathGen);
+      g.selectAll('path.sphere').attr('d', pathGen);
+    };
+
+    const zoom = d3.zoom()
+      .scaleExtent([1, 8])
+      .on('zoom', (event) => {
+        projection.scale(initialScale * event.transform.k);
+        renderPaths();
+      });
+
+    const drag = d3.drag()
+      .on('start', () => { isInteracting = true; })
+      .on('drag', (event) => {
+        const rotate = projection.rotate();
+        // Adjust sensitivity based on scale
+        const k = 75 / projection.scale();
+        projection.rotate([
+          rotate[0] + event.dx * k,
+          rotate[1] - event.dy * k
+        ]);
+        renderPaths();
+      })
+      .on('end', () => { isInteracting = false; });
+
+    // Invisible rect to catch pointer events over the entire SVG area
+    svg.append('rect')
+      .attr('width', width)
+      .attr('height', height)
+      .attr('fill', 'transparent')
+      .attr('pointer-events', 'all')
+      .on('click', () => {
+        if (onCountryClick) onCountryClick(null);
+      })
+      .on('pointerenter', () => { isInteracting = true; })
+      .on('pointerleave', () => { isInteracting = false; })
+      .call(drag)
+      .call(zoom);
+
+    // Create a container group
+    const g = svg.append('g').style('pointer-events', 'none');
+
+    // Sphere (Ocean background)
+    g.append('path')
+      .datum({ type: 'Sphere' })
+      .attr('class', 'sphere')
+      .attr('d', pathGen)
+      .attr('fill', '#EAF2F5')
+      .attr('stroke', '#CBD5E1')
+      .attr('stroke-width', 1);
 
     // Graticule
-    const graticule = d3.geoGraticule();
-    g.append('path').datum(graticule())
+    g.append('path')
+      .datum(d3.geoGraticule()())
+      .attr('class', 'graticule')
       .attr('d', pathGen)
       .attr('fill', 'none')
       .attr('stroke', '#E2E8F0')
       .attr('stroke-width', 0.5)
       .attr('opacity', 0.6);
 
+    // Countries container with pointer events enabled
+    const countriesGroup = svg.append('g').attr('class', 'countries-group');
+
     // Countries
-    g.selectAll('path.country')
+    countriesGroup.selectAll('path.country')
       .data(worldGeo.features)
       .join('path')
       .attr('class', 'country')
       .attr('d', pathGen)
       .attr('fill', d => {
-        // Try to match by ISO numeric ID via a known map
         const numericId = +d.id;
         const matchedEntry = countrySnapshot.find(c => numericIdToAlpha3(numericId) === c.code);
         if (matchedEntry && matchedEntry.total > 0) {
@@ -87,7 +142,6 @@ export default function EmissionsMap({ countrySnapshot, onCountryClick }) {
       .attr('stroke', 'white')
       .attr('stroke-width', 0.5)
       .attr('cursor', 'pointer')
-      .attr('opacity', 0)
       .on('mousemove', function(event, d) {
         const numericId = +d.id;
         const matchedEntry = countrySnapshot.find(c => numericIdToAlpha3(numericId) === c.code);
@@ -100,29 +154,91 @@ export default function EmissionsMap({ countrySnapshot, onCountryClick }) {
           year: matchedEntry?.year,
         });
       })
-      .on('mouseleave', function() {
-        d3.select(this).attr('stroke-width', 0.5).attr('stroke', 'white');
+      .on('mouseleave', function(event, d) {
+        const numericId = +d.id;
+        const alpha3 = numericIdToAlpha3(numericId);
+        const isSelected = alpha3 === selectedCountryCode;
+        d3.select(this)
+          .attr('stroke-width', isSelected ? 1.5 : 0.5)
+          .attr('stroke', isSelected ? '#D95D39' : 'white');
         setTooltip(null);
       })
       .on('click', function(event, d) {
+        event.stopPropagation();
         const numericId = +d.id;
         const matchedEntry = countrySnapshot.find(c => numericIdToAlpha3(numericId) === c.code);
-        if (matchedEntry && onCountryClick) onCountryClick(matchedEntry);
+        if (matchedEntry && onCountryClick) {
+          if (selectedCountryCode === matchedEntry.code) {
+            onCountryClick(null);
+          } else {
+            onCountryClick(matchedEntry);
+          }
+        }
       })
-      .transition()
-      .duration(800)
-      .delay((d, i) => i * 1.5)
-      .attr('opacity', 1);
+      // Initial stroke highlights
+      .attr('stroke', d => {
+        const alpha3 = numericIdToAlpha3(+d.id);
+        return alpha3 === selectedCountryCode ? '#D95D39' : 'white';
+      })
+      .attr('stroke-width', d => {
+        const alpha3 = numericIdToAlpha3(+d.id);
+        return alpha3 === selectedCountryCode ? 1.5 : 0.5;
+      });
 
-    // Sphere outline
-    g.append('path')
-      .datum({ type: 'Sphere' })
-      .attr('d', pathGen)
-      .attr('fill', 'none')
-      .attr('stroke', '#CBD5E1')
-      .attr('stroke-width', 1);
+    // We must update the countries group too inside renderPaths
+    const originalRenderPaths = renderPaths;
+    renderPaths = () => {
+      originalRenderPaths();
+      countriesGroup.selectAll('path.country').attr('d', pathGen);
+    };
 
-  }, [worldGeo, countrySnapshot, dims]);
+    // Auto-focus zoom logic
+    const prevSelected = prevSelectedRef.current;
+    prevSelectedRef.current = selectedCountryCode;
+
+    if (selectedCountryCode) {
+      const selectedFeature = worldGeo.features.find(f => numericIdToAlpha3(+f.id) === selectedCountryCode);
+      if (selectedFeature) {
+        const p = d3.geoCentroid(selectedFeature);
+        const currentRotate = projection.rotate();
+        const targetRotate = [-p[0], -p[1]];
+
+        d3.transition().duration(1000).tween('rotate', () => {
+          const r = d3.interpolate(currentRotate, targetRotate);
+          return (t) => {
+            projection.rotate(r(t));
+            renderPaths();
+          };
+        });
+
+        svg.transition().duration(1000).call(
+          zoom.transform,
+          d3.zoomIdentity.scale(2.5)
+        );
+      }
+    } else if (prevSelected) {
+      // Zoom out smoothly
+      svg.transition().duration(1000).call(zoom.transform, d3.zoomIdentity);
+    } else {
+      // Preserve manual zoom state across data renders
+      const currentTransform = d3.zoomTransform(svg.node());
+      projection.scale(initialScale * currentTransform.k);
+      renderPaths();
+    }
+
+    const timer = d3.timer(() => {
+      if (!isInteracting && !selectedCountryCode) {
+        const r = projection.rotate();
+        projection.rotate([r[0] + 0.15, r[1]]);
+        renderPaths();
+      }
+    });
+
+    return () => {
+      timer.stop();
+    };
+
+  }, [worldGeo, countrySnapshot, dims, selectedCountryCode]);
 
   return (
     <div className="relative w-full">
@@ -136,7 +252,7 @@ export default function EmissionsMap({ countrySnapshot, onCountryClick }) {
           {tooltip.total !== null ? (
             <>
               <div className="text-xs text-text-muted mt-1">
-                <span className="font-semibold text-warming">{(+tooltip.total * 1000).toFixed(1)} Gt CO₂</span> ({tooltip.year})
+                <span className="font-semibold text-text-primary">{(+tooltip.total * 1000).toFixed(1)} Gt CO₂</span> ({tooltip.year})
               </div>
             </>
           ) : (

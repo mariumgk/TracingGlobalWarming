@@ -40,7 +40,7 @@ export default function SignalSection({ data, envelope }) {
     <section id="signal" className="py-24" style={{ background: '#F7F4EC' }}>
       <div className="max-w-7xl mx-auto px-6">
         {/* Section header */}
-        <div className="max-w-2xl mb-16">
+        <div className="max-w-2xl mx-auto text-center mb-16">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
