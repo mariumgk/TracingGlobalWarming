@@ -9,9 +9,9 @@ function Earth() {
   
   // Load textures
   const [colorMap, specularMap, cloudsMap] = useTexture([
-    '/textures/earth_atmos_2048.jpg',
-    '/textures/earth_specular_2048.jpg',
-    '/textures/earth_clouds_1024.png'
+    `${import.meta.env.BASE_URL}textures/earth_atmos_2048.jpg`,
+    `${import.meta.env.BASE_URL}textures/earth_specular_2048.jpg`,
+    `${import.meta.env.BASE_URL}textures/earth_clouds_1024.png`
   ]);
 
   // Subtle auto-rotation

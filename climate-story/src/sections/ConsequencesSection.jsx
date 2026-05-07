@@ -83,7 +83,7 @@ export default function ConsequencesSection({ seaIce, seaLevel }) {
               aria-hidden="true"
               style={{
                 position: 'absolute', inset: 0,
-                backgroundImage: 'url(/arctic_sea_ice_bg.png)',
+                backgroundImage: `url(${import.meta.env.BASE_URL}arctic_sea_ice_bg.png)`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 opacity: 0.18,
@@ -125,7 +125,7 @@ export default function ConsequencesSection({ seaIce, seaLevel }) {
               aria-hidden="true"
               style={{
                 position: 'absolute', inset: 0,
-                backgroundImage: 'url(/sea_level_rise_bg.png)',
+                backgroundImage: `url(${import.meta.env.BASE_URL}sea_level_rise_bg.png)`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 opacity: 0.18,
