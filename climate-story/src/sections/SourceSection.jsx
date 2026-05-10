@@ -29,7 +29,7 @@ export default function SourceSection({ emissions, co2 }) {
   const latestEmissions = emissions?.worldByYear?.[emissions.worldByYear.length - 1];
 
   return (
-    <section id="source" ref={sectionRef} style={{ background: '#EAF2F5' }} className="py-24 relative z-10">
+    <section id="source" ref={sectionRef} style={{ background: 'linear-gradient(to bottom, #EEF2EE 0%, #EAF2F5 15%, #EAF2F5 100%)' }} className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-16">
@@ -105,21 +105,23 @@ export default function SourceSection({ emissions, co2 }) {
             whileInView={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ type: 'spring', bounce: 0.3, duration: 0.8 }}
             viewport={{ once: true, margin: "-50px" }}
-            className="md:col-span-3 chart-container min-w-0"
+            className="md:col-span-3 min-w-0 bg-white/40 backdrop-blur-lg border border-white/60 rounded-3xl p-6 md:p-8 shadow-sm"
           >
-            <div className="section-label mb-1">Emissions (left axis) vs Atmospheric CO₂ (right axis)</div>
-            <div className="flex gap-6 mb-4 text-xs">
-              <div className="flex items-center gap-1.5">
-                <div className="w-4 h-3 rounded-sm opacity-60" style={{ background: '#D95D39' }} />
-                <span className="text-text-muted">Fossil fuel emissions</span>
+            <div className="text-xl font-bold font-display text-text-primary mb-1">Stock vs. Flow: Atmospheric CO₂ and Annual Emissions</div>
+            <div className="flex flex-wrap gap-x-6 gap-y-2 mb-6 text-sm">
+              <div className="flex items-center gap-1.5 font-bold">
+                <span className="text-[#1A2B3C]">Stock:</span>
+                <svg width="20" height="10" className="ml-1"><line x1="0" y1="5" x2="20" y2="5" stroke="#1A2B3C" strokeWidth="3" /></svg>
+                <span className="text-text-muted font-normal">Atmospheric CO₂</span>
+              </div>
+              <div className="flex items-center gap-1.5 font-bold md:ml-4">
+                <span className="text-[#1A2B3C]">Flow:</span>
+                <div className="w-4 h-4 rounded-sm ml-1" style={{ background: '#E07A5F', opacity: 0.85 }} />
+                <span className="text-text-muted font-normal">Fossil fuels</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-4 h-3 rounded-sm opacity-50" style={{ background: '#F4B860' }} />
+                <div className="w-4 h-4 rounded-sm" style={{ background: '#F2CC8F', opacity: 0.85 }} />
                 <span className="text-text-muted">Land-use change</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <svg width="20" height="10"><line x1="0" y1="5" x2="20" y2="5" stroke="#102A43" strokeWidth="2" /></svg>
-                <span className="text-text-muted">Atmospheric CO₂</span>
               </div>
             </div>
             <EmissionsCO2Chart

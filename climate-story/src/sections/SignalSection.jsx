@@ -9,10 +9,6 @@ export default function SignalSection({ data, envelope }) {
 
   return (
     <section id="signal" className="signal-section">
-      {/* Full-screen background image */}
-      <div className="signal-bg-layer" />
-      {/* Soft readability overlay */}
-      <div className="signal-bg-overlay" />
 
       <div className="signal-existing-content relative z-10 max-w-7xl mx-auto px-6 py-24" ref={sectionRef}>
         {/* Section header */}

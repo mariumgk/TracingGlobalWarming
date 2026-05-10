@@ -48,12 +48,12 @@ export default function CauseSection({ data, observedData }) {
 
   return (
     <section id="cause" className="cause-section">
+
+
       {/* Single static background image — always visible, no per-step switching */}
       <div className="cause-bg-layer" style={{ backgroundImage: `url('/assets/volcanic.png')` }} />
       {/* Soft readability overlay */}
       <div className="cause-bg-overlay" />
-
-      {/* Layer 2: existing content — untouched */}
       <div className="cause-existing-content max-w-7xl mx-auto px-6 py-24">
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-16">
@@ -166,6 +166,12 @@ export default function CauseSection({ data, observedData }) {
           <ForcingAttributionChart data={data} observedData={observedData} revealStep={revealStep} />
         </div>
       </div>
+
+      {/* Absolute fade-out at the bottom of the section to hide the sticky image edge */}
+      <div 
+        className="absolute bottom-0 left-0 w-full h-48 pointer-events-none" 
+        style={{ zIndex: 5, background: 'linear-gradient(to bottom, transparent, #EEF2EE)' }} 
+      />
     </section>
   );
 }

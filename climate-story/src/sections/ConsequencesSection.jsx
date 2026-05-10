@@ -209,6 +209,12 @@ export default function ConsequencesSection({ seaIce, seaLevel }) {
           ))}
         </div>
       </div>
+
+      {/* Absolute fade-out at the bottom of the section to hide the sticky image edge */}
+      <div 
+        className="absolute bottom-0 left-0 w-full h-48 pointer-events-none" 
+        style={{ zIndex: 5, background: 'linear-gradient(to bottom, transparent, #EEF2EE)' }} 
+      />
     </section>
   );
 }

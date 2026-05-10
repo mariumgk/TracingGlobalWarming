@@ -194,6 +194,12 @@ export default function Hero() {
           </div>
         ))}
       </motion.div>
+
+      {/* Fade-out transition to the next section */}
+      <div 
+        className="absolute bottom-0 left-0 w-full h-48 pointer-events-none z-0" 
+        style={{ background: 'linear-gradient(to bottom, rgba(238, 242, 238, 0) 0%, rgba(238, 242, 238, 0.3) 40%, rgba(238, 242, 238, 0.7) 70%, rgba(238, 242, 238, 1) 100%)' }} 
+      />
     </section>
   );
 }

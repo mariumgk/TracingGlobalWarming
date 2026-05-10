@@ -109,7 +109,7 @@ export default function MapSection({ emissionsData }) {
   }, [pinnedCountry, hoveredCountry, currentData]);
 
   return (
-    <section id="where-we-stand" style={{ background: '#F7F4EC' }} className="py-24 overflow-hidden relative">
+    <section id="where-we-stand" style={{ background: 'linear-gradient(to bottom, #EAF2F5 0%, #F7F4EC 15%, #F7F4EC 100%)' }} className="py-24 overflow-hidden relative">
       <div className="max-w-[90rem] mx-auto px-6">
 
         {/* Header */}
@@ -142,48 +142,47 @@ export default function MapSection({ emissionsData }) {
           </motion.p>
         </div>
 
-        {/* Playback Controls — centered above chart */}
-        <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-4 bg-white/70 backdrop-blur-sm px-6 py-3 rounded-full shadow-sm border border-slate-200/50">
-            <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-text-primary transition-colors"
-            >
-              {isPlaying ? (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
-              ) : (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5"><path d="M8 5v14l11-7z"/></svg>
-              )}
-            </button>
-
-            <input
-              type="range"
-              min={minYear}
-              max={maxYear}
-              value={currentYear}
-              onChange={e => { setCurrentYear(Number(e.target.value)); setIsPlaying(false); }}
-              className="w-48 md:w-72 accent-warming cursor-pointer"
-            />
-
-            <div className="text-sm font-bold font-display text-text-primary min-w-[3rem] tabular-nums">
-              {currentYear}
-            </div>
-
-            <button
-              onClick={() => setPlaySpeed(s => s === 400 ? 150 : 400)}
-              title="Toggle speed"
-              className="text-xs text-text-muted hover:text-text-primary font-semibold px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 transition-colors"
-            >
-              {playSpeed === 400 ? '1×' : '2×'}
-            </button>
-          </div>
-        </div>
-
         {/* Main Grid */}
         <div className="grid lg:grid-cols-[1fr_300px] gap-8 items-start">
 
           {/* ── Chart Area ── */}
-          <div className="bg-white/50 backdrop-blur-md rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200/50">
+          <div className="bg-white/50 backdrop-blur-md rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200/50 sticky top-24">
+            {/* Playback Controls — centered above chart */}
+            <div className="flex justify-center mb-8">
+              <div className="flex items-center gap-4 bg-white/70 backdrop-blur-sm px-6 py-3 rounded-full shadow-sm border border-slate-200/50">
+                <button
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-text-primary transition-colors"
+                >
+                  {isPlaying ? (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+                  ) : (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5"><path d="M8 5v14l11-7z"/></svg>
+                  )}
+                </button>
+
+                <input
+                  type="range"
+                  min={minYear}
+                  max={maxYear}
+                  value={currentYear}
+                  onChange={e => { setCurrentYear(Number(e.target.value)); setIsPlaying(false); }}
+                  className="w-48 md:w-72 accent-warming cursor-pointer"
+                />
+
+                <div className="text-sm font-bold font-display text-text-primary min-w-[3rem] tabular-nums">
+                  {currentYear}
+                </div>
+
+                <button
+                  onClick={() => setPlaySpeed(s => s === 400 ? 150 : 400)}
+                  title="Toggle speed"
+                  className="text-xs text-text-muted hover:text-text-primary font-semibold px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 transition-colors"
+                >
+                  {playSpeed === 400 ? '1×' : '2×'}
+                </button>
+              </div>
+            </div>
             <EmissionsBarChartRace
               data={currentData}
               maxTotal={maxTotal}
@@ -354,82 +353,6 @@ export default function MapSection({ emissionsData }) {
                 </div>
               </div>
             </div>
-
-            {/* ── Insight Card ── */}
-            <div className="bg-white/80 rounded-2xl p-5 shadow-sm border border-slate-200/50">
-              <div className="text-xs font-bold text-warming uppercase tracking-wider mb-2">Insight</div>
-              <p className="text-sm text-text-primary leading-relaxed">
-                {currentYear < 1900
-                  ? 'In the 19th century, land-use change and early Western industrialization drove global emissions.'
-                  : currentYear < 1960
-                  ? 'The mid-20th century saw a surge in industrial emissions from the US and Europe.'
-                  : currentYear < 2000
-                  ? 'Industrialization spreads — Asian economies begin their rapid ascent.'
-                  : 'Today, a handful of large economies account for the vast majority of global CO₂.'}
-              </p>
-            </div>
-
-            {/* ── Pinned / Hovered Detail Card ── */}
-            <AnimatePresence mode="wait">
-              {detailCountryData && (
-                <motion.div
-                  key={detailCountryData.code}
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  className="bg-[#FEF2EE] rounded-2xl p-5 shadow-sm border border-warming/20 relative"
-                >
-                  <div className="text-xs font-bold text-warming uppercase tracking-wider mb-1">
-                    {pinnedCountry?.code === detailCountryData.code ? 'Pinned' : 'Viewing'}
-                  </div>
-                  <h3 className="text-lg font-display font-bold text-text-primary mb-3 pr-6 leading-tight">
-                    {detailCountryData.entity}
-                  </h3>
-
-                  {detailCountryData.total ? (
-                    <>
-                      <div className="text-2xl font-bold text-warming mb-3">
-                        {(detailCountryData.total / 1e9).toFixed(2)}{' '}
-                        <span className="text-sm font-medium text-text-muted">Gt</span>
-                      </div>
-                      <div className="space-y-2.5">
-                        <div>
-                          <div className="flex justify-between text-xs mb-1">
-                            <span className="text-text-muted">Fossil &amp; Industry</span>
-                            <span className="font-medium text-text-primary">{(detailCountryData.fossil / 1e9).toFixed(2)}</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-slate-500 rounded-full" style={{ width: `${Math.max(0, (detailCountryData.fossil / detailCountryData.total) * 100)}%` }} />
-                          </div>
-                        </div>
-                        <div>
-                          <div className="flex justify-between text-xs mb-1">
-                            <span className="text-text-muted">Land-Use Change</span>
-                            <span className="font-medium text-text-primary">{(detailCountryData.landUse / 1e9).toFixed(2)}</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${Math.max(0, (detailCountryData.landUse / detailCountryData.total) * 100)}%` }} />
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-sm text-text-muted">No data for {currentYear}</div>
-                  )}
-
-                  {pinnedCountry && (
-                    <button
-                      onClick={() => setPinnedCountry(null)}
-                      className="absolute top-4 right-4 text-text-muted hover:text-text-primary"
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                      </svg>
-                    </button>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
 
           </div>
         </div>
