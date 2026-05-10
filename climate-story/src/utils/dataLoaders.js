@@ -151,7 +151,13 @@ export async function loadEmissions() {
   const countrySnapshot = Array.from(latestByCountry.values())
     .sort((a, b) => b.total - a.total);
 
-  return { worldByYear, countrySnapshot };
+  // For animated bar chart race
+  const countriesHistory = countries.map(r => ({
+    ...r,
+    total: r.fossil + r.landUse
+  }));
+
+  return { worldByYear, countrySnapshot, countriesHistory };
 }
 
 /** NASA Sea Level: GMSL and smoothed GMSL (cm) */

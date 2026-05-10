@@ -265,3 +265,128 @@
     max-width: 100%;
   }
 }
+
+/* ── Shared BG-layer technique (Lenis-safe, no background-attachment:fixed) ── *
+ * Each bg-layer is position:sticky top:0, always 100vh tall.                   *
+ * margin-bottom:-100vh collapses its space so content flows normally on top.   *
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.cause-section,
+.consequences-section,
+.signal-section {
+  position: relative;
+  background: #EEF2EE;
+  z-index: 10;
+}
+
+/* Cause */
+.cause-section {
+  /* overflow:hidden deliberately omitted — breaks position:sticky on chart */
+}
+
+.cause-bg-layer {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  margin-bottom: -100vh;
+  z-index: 0;
+  background-image: url('/assets/volcanic.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.cause-bg-overlay {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  margin-bottom: -100vh;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(238, 242, 238, 0.10) 0%,
+    rgba(238, 242, 238, 0.10) 50%,
+    rgba(238, 242, 238, 0.98) 100%
+  );
+}
+
+.cause-existing-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Consequences */
+.consequences-bg-layer {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  margin-bottom: -100vh;
+  z-index: 0;
+  background-image: url('/assets/chapter3-bg.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.consequences-bg-overlay {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  margin-bottom: -100vh;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(238, 242, 238, 0.98) 0%,
+    rgba(238, 242, 238, 0.10) 22%,
+    rgba(238, 242, 238, 0.10) 78%,
+    rgba(238, 242, 238, 0.98) 100%
+  );
+}
+
+.consequences-existing-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Signal */
+.signal-bg-layer {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  margin-bottom: -100vh;
+  z-index: 0;
+  background-image: url('/assets/chapter1-bg.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.signal-bg-overlay {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  margin-bottom: -100vh;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(238, 242, 238, 0.98) 0%,
+    rgba(238, 242, 238, 0.10) 20%,
+    rgba(238, 242, 238, 0.10) 80%,
+    rgba(238, 242, 238, 0.98) 100%
+  );
+}
+
+.signal-existing-content {
+  position: relative;
+  z-index: 2;
+}
+

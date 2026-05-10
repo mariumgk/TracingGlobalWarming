@@ -122,7 +122,7 @@ export default function App() {
           <CauseSection data={data.forcings} observedData={data.observed} />
           <ConsequencesSection seaIce={data.seaIce} seaLevel={data.seaLevel} />
           <SourceSection emissions={data.emissions} co2={data.co2} />
-          <MapSection countrySnapshot={data.emissions?.countrySnapshot || []} />
+          <MapSection emissionsData={data.emissions} />
         </>
       )}
 

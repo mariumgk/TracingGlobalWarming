@@ -39,6 +39,24 @@ export default function Hero() {
         </Suspense>
       </motion.div>
 
+      {/* Floating data signals */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute h-[1px]"
+            style={{ 
+              width: `${Math.random() * 150 + 50}px`,
+              top: `${Math.random() * 60 + 20}%`,
+              left: '-20%',
+              background: `linear-gradient(to right, transparent, ${i % 2 === 0 ? '#F4B860' : '#a7dde8'}, transparent)`
+            }}
+            animate={{ left: ['-20%', '120%'], opacity: [0, 0.4, 0] }}
+            transition={{ duration: Math.random() * 15 + 15, repeat: Infinity, ease: 'linear', delay: Math.random() * 10 }}
+          />
+        ))}
+      </div>
+
       {/* Left content */}
       <motion.div 
         className="relative z-10 flex flex-col justify-center min-h-screen px-8 md:px-16 lg:px-24 max-w-2xl"
@@ -55,18 +73,27 @@ export default function Hero() {
           A Climate Data Story
         </motion.div>
 
-        {/* Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 60, filter: 'blur(15px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ type: 'spring', bounce: 0.4, duration: 1.2, delay: 0.4 }}
-          className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
-          style={{ color: '#F7F4EC' }}
-        >
-          Tracing<br />
-          <span style={{ color: '#D95D39' }}>Global</span>{' '}
-          <span style={{ color: '#F4B860' }}>Warming</span>
-        </motion.h1>
+        {/* Title with Mini Warming-Stripes Glow */}
+        <div className="relative">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.12 }}
+            transition={{ duration: 2, delay: 0.5 }}
+            className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-[120%] z-[-1] rounded-full blur-[40px] pointer-events-none"
+            style={{ background: 'linear-gradient(to right, #3A86A8, #F7F4EC, #F4B860, #D95D39, #A63A2D)' }}
+          />
+          <motion.h1
+            initial={{ opacity: 0, y: 60, filter: 'blur(15px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ type: 'spring', bounce: 0.4, duration: 1.2, delay: 0.4 }}
+            className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
+            style={{ color: '#F7F4EC' }}
+          >
+            Tracing<br />
+            <span style={{ color: '#D95D39' }}>Global</span>{' '}
+            <span style={{ color: '#F4B860' }}>Warming</span>
+          </motion.h1>
+        </div>
 
         <motion.p
           initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
@@ -119,48 +146,53 @@ export default function Hero() {
         </motion.button>
       </motion.div>
 
-      {/* Chapter cards at bottom */}
+      {/* Thin timeline ribbon */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.3 }}
-        className="relative z-10 px-8 md:px-16 lg:px-24 pb-10 mt-auto"
+        transition={{ duration: 1, delay: 1.3 }}
+        className="relative z-10 px-8 md:px-16 lg:px-24 pb-12 mt-auto w-full md:w-[60%]"
       >
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {CHAPTERS.map((ch, i) => (
-            <motion.button
-              key={ch.id}
-              initial={{ opacity: 0, y: 50, scale: 0.9, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-              transition={{ 
-                type: 'spring', 
-                bounce: 0.5,
-                duration: 0.8,
-                delay: 1.2 + i * 0.1 
-              }}
-              whileHover={{ 
-                scale: 1.08, 
-                y: -8,
-                rotateX: 8,
-                rotateY: -8,
-                boxShadow: "0 20px 40px -10px rgba(0,0,0,0.5)",
-                backgroundColor: 'rgba(255,255,255,0.1)'
-              }}
-              onClick={() => scrollTo(ch.id)}
-              className="text-left p-4 rounded-xl border transition-colors duration-200 cursor-pointer"
-              style={{
-                background: 'rgba(255,255,255,0.03)',
-                borderColor: 'rgba(255,255,255,0.1)',
-                perspective: '1000px',
-                transformStyle: 'preserve-3d'
-              }}
-            >
-              <div className="text-xs font-bold mb-1" style={{ color: ch.color }}>{ch.num}</div>
-              <div className="text-xs font-semibold mb-1" style={{ color: '#F7F4EC' }}>{ch.label}</div>
-              <div className="text-xs leading-tight" style={{ color: '#64748B' }}>{ch.sub}</div>
-            </motion.button>
-          ))}
+        <div className="relative h-[2px] w-full rounded-full" style={{ background: 'linear-gradient(to right, #3A86A8 0%, #94d2bd 40%, #F4B860 70%, #D95D39 100%)' }}>
+          {/* Moving timeline indicator */}
+          <motion.div 
+            initial={{ left: '0%' }}
+            animate={{ left: '100%' }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+            className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+          />
         </div>
+        <div className="flex justify-between w-full mt-3 text-[10px] md:text-xs uppercase tracking-[0.2em] font-semibold" style={{ color: '#64748B' }}>
+          <span>1880</span>
+          <span>1950</span>
+          <span>2000</span>
+          <span style={{ color: '#D95D39' }}>Today</span>
+        </div>
+      </motion.div>
+
+      {/* Minimal chapter constellation (Right Edge) */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 flex flex-col gap-6 md:gap-8 z-20 pointer-events-auto"
+      >
+        {CHAPTERS.map((ch, i) => (
+          <div 
+            key={ch.id}
+            className="relative flex items-center justify-end group cursor-pointer p-2"
+            onClick={() => scrollTo(ch.id)}
+          >
+            <span className="absolute right-6 mr-2 opacity-0 group-hover:opacity-100 group-hover:-translate-x-1 transition-all duration-300 whitespace-nowrap text-[10px] md:text-[11px] font-semibold tracking-wider uppercase" style={{ color: '#F7F4EC' }}>
+              <span className="mr-2 opacity-70" style={{ color: ch.color }}>{ch.num}</span>
+              {ch.label}
+            </span>
+            <div 
+              className="w-1.5 h-1.5 rounded-full transition-all duration-300 group-hover:scale-[2.5]"
+              style={{ backgroundColor: ch.color, boxShadow: `0 0 8px ${ch.color}80` }}
+            />
+          </div>
+        ))}
       </motion.div>
     </section>
   );

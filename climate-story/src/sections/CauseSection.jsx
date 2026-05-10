@@ -47,8 +47,14 @@ export default function CauseSection({ data, observedData }) {
   const onStepEnter = ({ data: stepData }) => setRevealStep(stepData);
 
   return (
-    <section id="cause" style={{ background: '#EAF2F5' }} className="py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="cause" className="cause-section">
+      {/* Single static background image — always visible, no per-step switching */}
+      <div className="cause-bg-layer" style={{ backgroundImage: `url('/assets/volcanic.png')` }} />
+      {/* Soft readability overlay */}
+      <div className="cause-bg-overlay" />
+
+      {/* Layer 2: existing content — untouched */}
+      <div className="cause-existing-content max-w-7xl mx-auto px-6 py-24">
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-16">
           <motion.div

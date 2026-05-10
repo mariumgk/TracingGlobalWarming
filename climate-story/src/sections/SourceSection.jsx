@@ -29,7 +29,7 @@ export default function SourceSection({ emissions, co2 }) {
   const latestEmissions = emissions?.worldByYear?.[emissions.worldByYear.length - 1];
 
   return (
-    <section id="source" ref={sectionRef} style={{ background: '#EAF2F5' }} className="py-24">
+    <section id="source" ref={sectionRef} style={{ background: '#EAF2F5' }} className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-16">
@@ -105,7 +105,7 @@ export default function SourceSection({ emissions, co2 }) {
             whileInView={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ type: 'spring', bounce: 0.3, duration: 0.8 }}
             viewport={{ once: true, margin: "-50px" }}
-            className="md:col-span-3 chart-container"
+            className="md:col-span-3 chart-container min-w-0"
           >
             <div className="section-label mb-1">Emissions (left axis) vs Atmospheric CO₂ (right axis)</div>
             <div className="flex gap-6 mb-4 text-xs">

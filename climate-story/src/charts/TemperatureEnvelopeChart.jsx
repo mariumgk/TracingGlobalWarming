@@ -77,21 +77,90 @@ export default function TemperatureEnvelopeChart({ observed, envelope, animated 
         .y1(yScale(envelope.upper))
         .curve(d3.curveBasis);
 
-      g.append('path')
+      const envPath = g.append('path')
         .datum(areaData)
         .attr('d', areaGen)
         .attr('fill', '#A8AEB8')
-        .attr('fill-opacity', 0.2)
+        .attr('fill-opacity', 0)
         .attr('stroke', '#A8AEB8')
         .attr('stroke-width', 1)
-        .attr('stroke-opacity', 0.4)
+        .attr('stroke-opacity', 0)
         .attr('stroke-dasharray', '4,3');
+        
+      if (animated) {
+        envPath.transition()
+          .delay(500)
+          .duration(1000)
+          .attr('fill-opacity', 0.15)
+          .attr('stroke-opacity', 0.4);
+      } else {
+        envPath.attr('fill-opacity', 0).attr('stroke-opacity', 0);
+      }
 
       // Envelope labels
-      g.append('text')
+      const envText = g.append('text')
         .attr('x', innerW - 5).attr('y', yScale(envelope.upper) - 4)
         .attr('text-anchor', 'end').attr('font-size', 10).attr('fill', '#A8AEB8')
+        .attr('opacity', 0)
         .text('Natural variability range');
+        
+      if (animated) {
+        envText.transition()
+          .delay(1000)
+          .duration(800)
+          .attr('opacity', 1);
+      }
+    }
+
+    // SVG Glow Filter
+    const defs = svg.append("defs");
+    const filter = defs.append("filter").attr("id", "glow").attr("x", "-20%").attr("y", "-20%").attr("width", "140%").attr("height", "140%");
+    filter.append("feGaussianBlur").attr("stdDeviation", "4").attr("result", "blur");
+    filter.append("feComposite").attr("in", "SourceGraphic").attr("in2", "blur").attr("operator", "over");
+
+    // Vertical marker for final year
+    const finalYear = observed[observed.length - 1];
+    if (finalYear) {
+      const finalX = xScale(finalYear.year);
+      g.append('line')
+        .attr('x1', finalX).attr('x2', finalX)
+        .attr('y1', 0).attr('y2', innerH)
+        .attr('stroke', '#D95D39')
+        .attr('stroke-width', 1)
+        .attr('stroke-opacity', 0)
+        .attr('stroke-dasharray', '4,4')
+        .transition()
+        .delay(animated ? 2000 : 0)
+        .duration(600)
+        .attr('stroke-opacity', 0.4);
+
+      // Latest warming annotation
+      g.append('text')
+        .attr('x', finalX - 8)
+        .attr('y', yScale(finalYear.mean) - 15)
+        .attr('text-anchor', 'end')
+        .attr('font-size', 12)
+        .attr('font-weight', 'bold')
+        .attr('fill', '#D95D39')
+        .attr('opacity', 0)
+        .text(`+${finalYear.mean.toFixed(2)}°C`)
+        .transition()
+        .delay(animated ? 2200 : 0)
+        .duration(600)
+        .attr('opacity', 1);
+        
+      g.append('text')
+        .attr('x', finalX - 8)
+        .attr('y', yScale(finalYear.mean) - 2)
+        .attr('text-anchor', 'end')
+        .attr('font-size', 10)
+        .attr('fill', '#A8AEB8')
+        .attr('opacity', 0)
+        .text(`in ${finalYear.year}`)
+        .transition()
+        .delay(animated ? 2200 : 0)
+        .duration(600)
+        .attr('opacity', 1);
     }
 
     // Observed line
@@ -102,6 +171,17 @@ export default function TemperatureEnvelopeChart({ observed, envelope, animated 
 
     const path = lineGen(observed);
     setLinePath(path);
+
+    // Glow path
+    const glowPathEl = g.append('path')
+      .datum(observed)
+      .attr('d', path)
+      .attr('fill', 'none')
+      .attr('stroke', '#D95D39')
+      .attr('stroke-width', 5)
+      .attr('stroke-opacity', 0.3)
+      .attr('stroke-linecap', 'round')
+      .attr('filter', 'url(#glow)');
 
     const pathEl = g.append('path')
       .attr('class', 'observed-line')
@@ -116,13 +196,22 @@ export default function TemperatureEnvelopeChart({ observed, envelope, animated 
     setPathLength(totalLength);
 
     if (!animated) {
-      pathEl.attr('stroke-dasharray', totalLength).attr('stroke-dashoffset', 0);
+      pathEl.attr('stroke-dasharray', totalLength).attr('stroke-dashoffset', totalLength);
+      glowPathEl.attr('stroke-dasharray', totalLength).attr('stroke-dashoffset', totalLength);
     } else {
       pathEl
         .attr('stroke-dasharray', totalLength)
         .attr('stroke-dashoffset', totalLength)
         .transition()
-        .duration(2200)
+        .duration(2000)
+        .ease(d3.easeQuadInOut)
+        .attr('stroke-dashoffset', 0);
+
+      glowPathEl
+        .attr('stroke-dasharray', totalLength)
+        .attr('stroke-dashoffset', totalLength)
+        .transition()
+        .duration(2000)
         .ease(d3.easeQuadInOut)
         .attr('stroke-dashoffset', 0);
     }
@@ -136,11 +225,18 @@ export default function TemperatureEnvelopeChart({ observed, envelope, animated 
         .y1(d => yScale(d.mean))
         .curve(d3.curveBasis);
 
-      g.append('path')
+      const warmPath = g.append('path')
         .datum(observed.filter(d => d.year >= d3.min(warmingData, w => w.year)))
         .attr('d', areaGenWarm)
         .attr('fill', '#D95D39')
-        .attr('fill-opacity', 0.12);
+        .attr('fill-opacity', 0);
+        
+      if (animated) {
+        warmPath.transition()
+          .delay(1500)
+          .duration(1000)
+          .attr('fill-opacity', 0.12);
+      }
     }
 
     // Annotation point — last data point

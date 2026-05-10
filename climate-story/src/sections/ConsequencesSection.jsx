@@ -34,8 +34,14 @@ export default function ConsequencesSection({ seaIce, seaLevel }) {
   const slRise = firstSL && lastSL ? (lastSL.gmslSmooth - firstSL.gmslSmooth).toFixed(1) : '>10';
 
   return (
-    <section id="consequences" ref={sectionRef} style={{ background: '#F7F4EC' }} className="py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="consequences" ref={sectionRef} className="consequences-section">
+      {/* Full-screen background image */}
+      <div className="consequences-bg-layer" />
+      {/* Soft readability overlay */}
+      <div className="consequences-bg-overlay" />
+
+      {/* Existing content — untouched */}
+      <div className="consequences-existing-content max-w-7xl mx-auto px-6 py-24">
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-16">
           <motion.div
